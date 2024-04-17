@@ -1,47 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export const setUniqueIdInFileData = (fileData = []) => {
-    fileData?.length > 0 && fileData?.map(item => {
-        item['id'] = uuidv4();
-
-        if(item.hasOwnProperty('files') && item.files?.length > 0) {
-            setUniqueIdInFileData(item.files);
-        }
-
-        return item;
-    })
-
-    return fileData;
-}
-
-export const setIsFileOrFolder = (fileData = []) => {
-    fileData?.length > 0 && fileData?.map(item => {
-        const { name = ''} = item;
-        const isFolder = !name.includes('.')
-
-        item['isFolder'] = isFolder;
-
-        if(item.hasOwnProperty('files') && item.files?.length > 0) {
-            setIsFileOrFolder(item.files);
-        }
-
-        return item;
-    })
-
-    return fileData;
-}
+export const isValidFileName = (fileName = '') => fileName?.includes('.');
 
 export const fileDataTransformer = (fileData = []) => {
     fileData?.length > 0 && fileData?.map(item => {
         const { name = ''} = item;
-        const isFolder = !name.includes('.')
+        const isFolder = !isValidFileName(name);
         
         item['isFolder'] = isFolder;
         item['id'] = uuidv4();
 
         if(item.hasOwnProperty('files') && item.files?.length > 0) {
-            setIsFileOrFolder(item.files);
-            setUniqueIdInFileData(item.files);
+            fileDataTransformer(item.files);
         }
 
         return item;
@@ -55,12 +25,35 @@ export const getFolderNameFromFileName = (fileName = '') => {
     let folderName = '';
 
     if(isDotGitIgnoreFileType) {
-        const [_ext, name] = fileName.split('.');
+        const [_, name] = fileName.split('.');
         folderName = name;
     } else {
-        const [name, _ext] = fileName.split('.');
+        const [name, _] = fileName.split('.');
         folderName = name;
     }
 
-    return folderName;
+    return folderName || fileName;
+};
+
+export const validateFileInput = (currentFileItem = {}, userInput = '') => {
+    let isValid = true;
+
+          const currentFileItemCpy = Object.assign({}, currentFileItem);
+          const hasEmptyFileName = !userInput;
+    
+          const hasExistingFileName = currentFileItemCpy['files']?.some(item => item.name === userInput);
+    
+          if (hasExistingFileName) {
+            window?.alert('File name already exists.');
+          }
+    
+          if (hasEmptyFileName) {
+            window?.alert('Please enter a file name in the input box');
+          }
+    
+          if (hasExistingFileName || hasEmptyFileName) {
+            isValid = false;
+          }
+
+          return isValid;
 };

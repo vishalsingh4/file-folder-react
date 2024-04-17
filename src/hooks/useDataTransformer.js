@@ -12,9 +12,6 @@ export default function useFileDataTransformer(fileData = []) {
     }
 
     useEffect(() => {
-        // const listWithIds = setUniqueIdInFileData(INITIAL_DATA);
-        // const listWithIsFileOrFolder = setIsFileOrFolder(listWithIds);
-
         transformFileDataList(INITIAL_DATA);
     }, []);
 

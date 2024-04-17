@@ -1,18 +1,25 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { getFolderNameFromFileName } from '../../utils';
-
-import './index.scss';
 import Button from '../Button';
 import Input from '../Input';
+
+import { isValidFileName, validateFileInput } from '../../utils';
+import fileReducer, { getDefaultInitialState, FILE_ACTIONS } from './fileReducer';
+
+import './index.scss';
 
 function FileList({
   fileItem = {},
 }) {
+  const [state, dispatch] = useReducer(fileReducer, getDefaultInitialState({
+    defaultCurrentFileItem: fileItem
+  }));
 
-  const [currentFileItem, setCurrentFileItem] = useState({});
-  const [inputValue, setInputValue] = useState('');
+  const {
+    currentFileItem,
+    inputValue
+  } = state;
 
   const {
     id,
@@ -21,97 +28,59 @@ function FileList({
     files,
     isFolder
   } = currentFileItem;
-  const isNodeModulesFolder = name === 'node_modules';
 
+  const isNodeModulesFolder = name === 'node_modules';
 
   const handleToggle = (e) => {
     e.preventDefault();
-    const currentFileItemCpy = Object.assign({}, currentFileItem);
 
-    if (currentFileItemCpy.id === id) {
-      currentFileItemCpy['isOpen'] = !currentFileItemCpy['isOpen'];
-    }
-
-    setCurrentFileItem(currentFileItemCpy);
+    dispatch({
+      type: FILE_ACTIONS.TOGGLE_ICON_CLICK
+    })
   };
 
   const handleAddFile = (e) => {
-    if (e.key === 'Enter') {
-      /** validations */
+    const enterBtnPressed = (e.key === 'Enter' || e.keyCode === 13);
 
-      const currentFileItemCpy = Object.assign({}, currentFileItem);
+    if (enterBtnPressed) {
       const userInput = e.target.value;
-      const hasEmptyFileName = !userInput;
+      const isValid = validateFileInput(currentFileItem, userInput);
 
-      const hasExistingFileName = currentFileItemCpy['files']?.some(item => item.name === userInput);
-
-      if (hasExistingFileName) {
-        window?.alert('File name already exists.');
-      }
-
-      if (hasEmptyFileName) {
-        window?.alert('Please enter a file name in the input box');
-      }
-
-      if (hasExistingFileName || hasEmptyFileName) {
+      if (!isValid) {
         return false;
       }
 
-      try {
-        if (!currentFileItemCpy.id === id) {
-          throw new Error('Id not found!');
-        }
-
-        if (currentFileItemCpy.id === id) {
-          const newItem = {
-            name: userInput,
-            id: uuidv4(),
-            isFolder: false
-          }
-
-          if (currentFileItemCpy.hasOwnProperty('files')) {
-            currentFileItemCpy['files'].unshift(newItem);
-          } else {
-            currentFileItemCpy['files'] = [newItem];
-          }
-          setCurrentFileItem(currentFileItemCpy);
-          setInputValue('');
-        }
-      } catch (e) {
-        console.error(e);
+      const newItem = {
+        name: userInput,
+        id: uuidv4(),
+        isFolder: false
       }
+
+      dispatch({
+        type: FILE_ACTIONS.ADD_FILE,
+        payload: newItem
+      })
+
+      dispatch({
+        type: FILE_ACTIONS.INPUT_CHANGE,
+        payload: ''
+      })
     }
   };
 
   const handleDblClick = (e) => {
     const selectedTextName = e.target.dataset.fileName;
-    const isFileName = selectedTextName?.includes('.');
+    const isFileName = isValidFileName(selectedTextName);
 
     if (!isFileName) {
       return false;
     }
 
-    const currentFileItemCpy = Object.assign({}, currentFileItem);
-
-    try {
-      if (!currentFileItemCpy.id === id) {
-        throw new Error('Id not found!');
-      }
-
-      if (currentFileItemCpy.name === selectedTextName) {
-        currentFileItemCpy.name = getFolderNameFromFileName(currentFileItemCpy.name) || currentFileItemCpy.name;
-        currentFileItemCpy.isFolder = true;
-
-        setCurrentFileItem(currentFileItemCpy);
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    dispatch({
+      type: FILE_ACTIONS.DBL_CLICK_FILE,
+      payload: selectedTextName
+    })
   };
-
-  useEffect(() => {
-    setCurrentFileItem(fileItem);
-  }, [fileItem]);
 
   return (
     <>
@@ -128,7 +97,13 @@ function FileList({
         <>
           <Input
             value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
+            onChange={e => {
+              dispatch({
+                type: FILE_ACTIONS.INPUT_CHANGE,
+                payload: e.target.value
+              })
+            }
+            }
             onKeyDown={handleAddFile}
             data-testid="input-box"
             className='file-input'
