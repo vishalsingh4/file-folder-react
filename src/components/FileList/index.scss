@@ -1,0 +1,30 @@
+@import '../../assets/base.scss';
+
+.file-item {
+    >button {
+        background-color: $green;
+        color: $white;
+        padding: $spacing-l;
+        border-radius: 4px;
+        border: 1px solid $green;
+        margin-bottom: $spacing-xs;
+        display: flex;
+        justify-content: space-between;
+
+        >span {
+            margin-left: $spacing-l;
+            cursor: pointer;
+        }
+    }
+}
+
+.file-input {
+    padding: $spacing-xs $spacing-l;
+    margin-bottom: $spacing-s;
+    border-radius: 4px;
+    border: 1px solid $black;
+}
+
+.nested-files {
+    padding-left: $spacing-xl;
+}
