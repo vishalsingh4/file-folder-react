@@ -11,7 +11,7 @@ In the project directory, you can run:
 ### `npm build` - To create a production ready build folder.
 ### `npm eject`  - To alter internal configurations like Webpack, Babel, etc. (Caution: This is a one-way process.)
 
-Dependencies used:
+## Dependencies used:
 - Core
     1. React and ReactDOM - For building interactive DOM and its manipulation.
     2. UUID - For generating unique identifiers.
@@ -20,17 +20,21 @@ Dependencies used:
     1. @testing-library/react - For unit test cases.
     2. SASS - CSS preprocessor.
 
-Steps to start the application - 
+- Git URL - https://github.com/vishalsingh4/file-folder-react
+
+- Git Branch - main
+
+- Steps to boot the application - 
     1. GIT CLONE using https  - https://github.com/vishalsingh4/file-folder-react.git
     2. npm i
     3. npm start
 
 
-# General Requirements - 
-There should be a "+" button at the end of every folder - (except node_modules).
-Clicking a file should do nothing if it does not have any files/folder.
-Double-clicking a file should make it a folder.
-Clicking a folder should toggle its expansion and change the + sign to - sign on expansion and vice versa.
-Clicking the "+" button
-should take the file name from the input box, add it to the required folder and reset the input box.
-should, if the input box is empty, display an alert saying, "Please enter a file name in the input box".
+- General Requirements -
+1. There should be a "+" button at the end of every folder - (except node_modules).
+2. Clicking a file should do nothing if it does not have any files/folder.
+3. Double-clicking a file should make it a folder.
+4. Clicking a folder should toggle its expansion and change the + sign to - sign on expansion and vice versa.
+5. Clicking the "+" button
+    should take the file name from the input box, add it to the required folder and reset the input box.
+    should, if the input box is empty, display an alert saying, "Please enter a file name in the input box".
