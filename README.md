@@ -28,6 +28,8 @@ In the project directory, you can run:
     1. GIT CLONE using https  - https://github.com/vishalsingh4/file-folder-react.git
     2. npm i
     3. npm start
+    4. npm test - To run unit test cases
+    5. npm run test -- --coverage --watchAll - To generate coverage report
 
 
 - General Requirements -
