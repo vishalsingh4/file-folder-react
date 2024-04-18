@@ -72,6 +72,8 @@ function FileList({
     const selectedTextName = e.target.dataset.fileName;
     const isFileName = isValidFileName(selectedTextName);
 
+    console.log(e.target, '***')
+    debugger;
     if (!isFileName) {
       return false;
     }
@@ -87,7 +89,7 @@ function FileList({
       <li key={id} className='file-item'>
         <Button
           name={name}
-          onDoubleClick={handleDblClick}
+          onDblClick={handleDblClick}
           showIcon={isFolder && !isNodeModulesFolder}
           onToggleIconClick={handleToggle}
           showOpenIcon={isOpen}
