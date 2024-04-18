@@ -11,7 +11,14 @@
         display: flex;
         justify-content: space-between;
 
-        >span {
+        .name {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toggle-icon {
             margin-left: $spacing-l;
             cursor: pointer;
         }
