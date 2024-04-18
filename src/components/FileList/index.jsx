@@ -72,8 +72,6 @@ function FileList({
     const selectedTextName = e.target.dataset.fileName;
     const isFileName = isValidFileName(selectedTextName);
 
-    console.log(e.target, '***')
-    debugger;
     if (!isFileName) {
       return false;
     }
